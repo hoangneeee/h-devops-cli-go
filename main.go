@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/urfave/cli"
+	"h-devops/cmd"
 	"log"
 	"os"
 )
@@ -9,18 +10,27 @@ import (
 func main() {
 	app := cli.NewApp()
 	app.Name = "h-devops"
-	app.Usage = "Devops support tool"
-	app.Version = "1.0.0"
+	app.Usage = "Tools to assist devops using CLI"
+	app.Version = "0.4.0"
 
 	app.Commands = []cli.Command{
 		{
-			Name:    "hello",
-			Aliases: []string{"h"},
-			Usage:   "Prints 'Hello, World!'",
-			Action: func(c *cli.Context) error {
-				log.Println("Hello, World!")
-				return nil
-			},
+			Name:    "install-nvm",
+			Aliases: []string{"i-nvm"},
+			Usage:   "Install Node version manager (NVM)",
+			Action:  cmd.InstallNVM,
+		},
+		{
+			Name:    "add-sudoers",
+			Aliases: []string{"su"},
+			Usage:   "Add a user to sudoers file",
+			Action:  cmd.AddSudoers,
+		},
+		{
+			Name:    "test",
+			Aliases: []string{"test"},
+			Usage:   "Function test",
+			Action:  cmd.Test,
 		},
 	}
 
