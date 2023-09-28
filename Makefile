@@ -17,4 +17,8 @@ compile:
 	GOOS=linux GOARCH=amd64 go build -o bin/h-devops-linux-amd64 main.go
 	GOOS=freebsd GOARCH=386 go build -o bin/h-devops-freebsd-386 main.go
 
+compose:
+	docker-compose watch
+
+
 

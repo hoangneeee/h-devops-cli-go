@@ -24,3 +24,10 @@ h-devops docker add <username>
 ```shell
 h-devops su <username>
 ```
+---
+
+### How to develop
+Required docker-compose version 2.22.0 or higher
+```shell
+docker-compose watch  
+```

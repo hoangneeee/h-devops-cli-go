@@ -1,0 +1,25 @@
+
+services:
+  dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: 'h-devops-dev'
+    develop:
+      watch:
+        - action: rebuild
+          path: go.mod
+        - action: rebuild
+          path: Dockerfile
+        - action: rebuild
+          path: go.sum
+        - action: sync
+          path: main.go
+          target: /build/main.go
+        - action: sync
+          path: ./cmd
+          target: /build/cmd
+        - action: sync
+          path: ./helpers
+          target: /build/helpers
+
