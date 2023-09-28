@@ -69,6 +69,9 @@ func SetupDockerEnv(c *cli.Context) error {
 	err := helpers.CheckPermissionSudo()
 	helpers.HandleError(err)
 
+	err = helpers.CheckCurlExist()
+	helpers.HandleError(err)
+
 	fmt.Println("Installing Docker...")
 	if err := installDocker(); err != nil {
 		log.Fatalf("Error installing Docker: %v\n", err)
@@ -96,6 +99,15 @@ func AddUserToDockerGroup(c *cli.Context) error {
 	err = helpers.RunCmd("newgrp", "docker")
 	helpers.HandleError(err)
 
+	return nil
+}
+
+func GetTempPostgresBackupToS3(c *cli.Context) error {
+	err := helpers.CheckCurlExist()
+	helpers.HandleError(err)
+
+	err = helpers.RunCmd("curl", "-o", "docker-compose.yaml", "https://raw.githubusercontent.com/hoangneeee/postgres-backup-s3/master/docker-compose.example.yaml")
+	helpers.HandleError(err)
 	return nil
 }
 

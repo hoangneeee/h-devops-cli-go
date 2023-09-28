@@ -42,6 +42,13 @@ func main() {
 				Action:  cmd.AddSudoers,
 			},
 			{
+				Name:        "postgres-backup-s3",
+				Aliases:     []string{"pbs3"},
+				Usage:       "Get service backup data postgres to S3",
+				Description: "A handy Docker container to periodically backup PostgresSQL to S3",
+				Action:      cmd.GetTempPostgresBackupToS3,
+			},
+			{
 				Name:    "setup-docker-env",
 				Aliases: []string{"docker", "d"},
 				Usage:   "Setup Docker env",
