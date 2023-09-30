@@ -49,6 +49,13 @@ func main() {
 				Action:      cmd.GetTempPostgresBackupToS3,
 			},
 			{
+				Name:        "elasticsearch-snapshot-s3",
+				Aliases:     []string{"ens"},
+				Usage:       "Get service elasticsearch snapshot to S3",
+				Description: "A handy Docker container to periodically snapshot Elasticsearch to S3",
+				Action:      cmd.GetTempEnsToS3,
+			},
+			{
 				Name:    "setup-docker-env",
 				Aliases: []string{"docker", "d"},
 				Usage:   "Setup Docker env",

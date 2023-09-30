@@ -111,6 +111,15 @@ func GetTempPostgresBackupToS3(c *cli.Context) error {
 	return nil
 }
 
+func GetTempEnsToS3(c *cli.Context) error {
+	err := helpers.CheckCurlExist()
+	helpers.HandleError(err)
+
+	err = helpers.RunCmd("curl", "-o", "docker-compose.yaml", "https://raw.githubusercontent.com/hoangneeee/elasticsearch-snapshot-s3/master/docker-compose.example.yaml")
+	helpers.HandleError(err)
+	return nil
+}
+
 // Private function
 
 func installDocker() error {
