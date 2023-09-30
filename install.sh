@@ -51,8 +51,8 @@ execute() {
     if [ "$OS" = "windows" ]; then
       binexe="${binexe}.exe"
     fi
-    install "${srcdir}/${binexe}" "${BINDIR}/"
-    log_info "installed ${BINDIR}/${binexe}"
+    install "${srcdir}/${binexe}" "${BINDIR}/h-devops"
+    log_info "installed ${BINDIR}/h-devops"
   done
 }
 
@@ -227,6 +227,119 @@ uname_arch_check() {
   return 1
 }
 
+untar() {
+  tarball=$1
+  case "${tarball}" in
+    *.tar.gz | *.tgz) tar -xzf "${tarball}" ;;
+    *.tar) tar -xf "${tarball}" ;;
+    *.zip) unzip "${tarball}" ;;
+    *)
+      log_err "untar unknown archive format for ${tarball}"
+      return 1
+      ;;
+  esac
+}
+
+mktmpdir() {
+  test -z "$TMPDIR" && TMPDIR="$(mktemp -d)"
+  mkdir -p "${TMPDIR}"
+  echo "${TMPDIR}"
+}
+
+http_download_curl() {
+  local_file=$1
+  source_url=$2
+  header=$3
+  if [ -z "$header" ]; then
+    code=$(curl -w '%{http_code}' -sL -o "$local_file" "$source_url")
+  else
+    code=$(curl -w '%{http_code}' -sL -H "$header" -o "$local_file" "$source_url")
+  fi
+  if [ "$code" != "200" ]; then
+    log_debug "http_download_curl received HTTP status $code"
+    return 1
+  fi
+  return 0
+}
+http_download_wget() {
+  local_file=$1
+  source_url=$2
+  header=$3
+  if [ -z "$header" ]; then
+    wget -q -O "$local_file" "$source_url"
+  else
+    wget -q --header "$header" -O "$local_file" "$source_url"
+  fi
+}
+http_download() {
+  log_debug "http_download $2"
+  if is_command curl; then
+    http_download_curl "$@"
+    return
+  elif is_command wget; then
+    http_download_wget "$@"
+    return
+  fi
+  log_crit "http_download unable to find wget or curl"
+  return 1
+}
+http_copy() {
+  tmp=$(mktemp)
+  http_download "${tmp}" "$1" "$2" || return 1
+  body=$(cat "$tmp")
+  rm -f "${tmp}"
+  echo "$body"
+}
+github_release() {
+  owner_repo=$1
+  version=$2
+  test -z "$version" && version="latest"
+  giturl="https://github.com/${owner_repo}/releases/${version}"
+  json=$(http_copy "$giturl" "Accept:application/json")
+  test -z "$json" && return 1
+  version=$(echo "$json" | tr -s '\n' ' ' | sed 's/.*"tag_name":"//' | sed 's/".*//')
+  test -z "$version" && return 1
+  echo "$version"
+}
+hash_sha256() {
+  TARGET=${1:-/dev/stdin}
+  if is_command gsha256sum; then
+    hash=$(gsha256sum "$TARGET") || return 1
+    echo "$hash" | cut -d ' ' -f 1
+  elif is_command sha256sum; then
+    hash=$(sha256sum "$TARGET") || return 1
+    echo "$hash" | cut -d ' ' -f 1
+  elif is_command shasum; then
+    hash=$(shasum -a 256 "$TARGET" 2>/dev/null) || return 1
+    echo "$hash" | cut -d ' ' -f 1
+  elif is_command openssl; then
+    hash=$(openssl -dst openssl dgst -sha256 "$TARGET") || return 1
+    echo "$hash" | cut -d ' ' -f a
+  else
+    log_crit "hash_sha256 unable to find command to compute sha-256 hash"
+    return 1
+  fi
+}
+hash_sha256_verify() {
+  TARGET=$1
+  checksums=$2
+  if [ -z "$checksums" ]; then
+    log_err "hash_sha256_verify checksum file not specified in arg2"
+    return 1
+  fi
+  BASENAME=${TARGET##*/}
+  want=$(grep "${BASENAME}" "${checksums}" 2>/dev/null | tr '\t' ' ' | cut -d ' ' -f 1)
+  if [ -z "$want" ]; then
+    log_err "hash_sha256_verify unable to find checksum for '${TARGET}' in '${checksums}'"
+    return 1
+  fi
+  got=$(hash_sha256 "$TARGET")
+  if [ "$want" != "$got" ]; then
+    log_err "hash_sha256_verify checksum for '$TARGET' did not verify ${want} vs $got"
+    return 1
+  fi
+}
+
 cat /dev/null <<EOF
 ------------------------------------------------------------------------
 End of functions from https://github.com/client9/shlib
@@ -249,9 +362,6 @@ log_prefix() {
 }
 PLATFORM="${OS}/${ARCH}"
 GITHUB_DOWNLOAD=https://github.com/${OWNER}/${REPO}/releases/download
-
-echo $PLATFORM
-echo $GITHUB_DOWNLOAD
 
 uname_os_check "$OS"
 uname_arch_check "$ARCH"
