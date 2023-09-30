@@ -2,8 +2,7 @@
 
 ### How to install
 ```shell
-mv bin/h-devops /usr/local/bin/h-devops
-chmod a+x /usr/local/bin/h-devops
+curl -L https://raw.githubusercontent.com/hoangneeee/h-devops-cli-go/master/install.sh | bash
 ```
 
 ---
