@@ -38,7 +38,7 @@ func CheckPermissionSudo() error {
 }
 
 func CheckCurlExist() error {
-	cmd := exec.Command("which", "ok")
+	cmd := exec.Command("which", "curl")
 	_, err := cmd.CombinedOutput()
 	if err != nil {
 		fmt.Println("Please install curl: sudo apt-get install curl")
