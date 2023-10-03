@@ -10,6 +10,22 @@ import (
 	"strings"
 )
 
+// ListCommands description of the Go function.
+//
+// # List of available commands
+//
+// ListCommands takes a *cli.Context parameter and returns an error.
+func ListCommands(c *cli.Context) error {
+	helpers.Log("List of available commands")
+	helpers.SubLog("nvm i")
+	helpers.SubLog("su <username>")
+	helpers.SubLog("pbs3")
+	helpers.SubLog("ens")
+	helpers.SubLog("d i")
+	helpers.SubLog("d add <username>")
+	return nil
+}
+
 // InstallNVM installs NVM if it is not already installed.
 //
 // Parameters:
