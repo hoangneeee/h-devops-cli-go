@@ -8,10 +8,12 @@ import (
 	"time"
 )
 
+const VERSION = "0.4.1"
+
 func main() {
 	app := &cli.App{
 		Name:     "h-devops",
-		Version:  "0.4.0",
+		Version:  VERSION,
 		Compiled: time.Now(),
 		Authors: []*cli.Author{
 			{
@@ -22,6 +24,12 @@ func main() {
 		Usage:   "Tools to assist devops using CLI",
 		Suggest: true,
 		Commands: []*cli.Command{
+			{
+				Name:    "commands",
+				Aliases: []string{"cmd"},
+				Usage:   "List of available commands",
+				Action:  cmd.ListCommands,
+			},
 			{
 				Name:    "nvm",
 				Aliases: []string{"nvm"},
