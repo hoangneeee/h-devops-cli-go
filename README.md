@@ -55,6 +55,20 @@ h-devops su <username>
 h-devops nvm i
 ```
 
+### Certbot commands
+- Install Certbot
+```shell
+h-devops cert i
+```
+- Auto-renew Let's encrypt certificate for Nginx
+```shell
+h-devops cert a
+```
+- Check Certificates expiry date
+```shell
+h-devops cert ex
+```
+
 ---
 
 ## How to develop
