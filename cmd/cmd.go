@@ -23,6 +23,9 @@ func ListCommands(c *cli.Context) error {
 	helpers.SubLog("ens")
 	helpers.SubLog("d i")
 	helpers.SubLog("d add <username>")
+	helpers.SubLog("cert i")
+	helpers.SubLog("cert a")
+	helpers.SubLog("cert ex")
 	return nil
 }
 
@@ -88,17 +91,17 @@ func SetupDockerEnv(c *cli.Context) error {
 	err = helpers.CheckCurlExist()
 	helpers.HandleError(err)
 
-	fmt.Println("Installing Docker...")
+	helpers.Log("Installing Docker...")
 	if err := installDocker(); err != nil {
 		log.Fatalf("Error installing Docker: %v\n", err)
 	}
-	fmt.Println("Docker installed successfully.")
+	helpers.Log("Docker installed successfully.")
 
-	fmt.Println("Installing Docker Compose...")
+	helpers.Log("Installing Docker Compose...")
 	if err := installDockerCompose(); err != nil {
 		log.Fatalf("Error installing Docker Compose: %v\n", err)
 	}
-	fmt.Println("Docker Compose installed successfully.")
+	helpers.Log("Docker Compose installed successfully.")
 	return nil
 }
 
@@ -132,6 +135,63 @@ func GetTempEnsToS3(c *cli.Context) error {
 	helpers.HandleError(err)
 
 	err = helpers.RunCmd("curl", "-o", "docker-compose.yaml", "https://raw.githubusercontent.com/hoangneeee/elasticsearch-snapshot-s3/master/docker-compose.example.yaml")
+	helpers.HandleError(err)
+	return nil
+}
+
+func InstallCertbot(c *cli.Context) error {
+	err := helpers.CheckPermissionSudo()
+	helpers.HandleError(err)
+
+	// Check certbot exist
+	cmd := exec.Command("which", "certbot")
+	_, err = cmd.CombinedOutput()
+	if err == nil {
+		helpers.Log("Certbot is already installed.")
+		return nil
+	} else {
+		err := helpers.RunCmd("apt-get", "install", "certbot", "python3-certbot-nginx")
+		helpers.HandleError(err)
+	}
+
+	return nil
+}
+
+// AutoRenewCertbotGuide generates a guide on how to set up auto-renewal for Certbot.
+//
+// Takes a cli.Context as input.
+// Returns an error.
+func AutoRenewCertbotGuide(c *cli.Context) error {
+	helpers.Log("===========")
+	helpers.Log("Guide")
+	helpers.Log("===========")
+	helpers.Log("Typing command:")
+	helpers.SubLog("crontab -e")
+	helpers.Log("Insert the following line:")
+	helpers.SubLog("00 01 01 */3 * certbot renew --post-hook \"systemctl reload nginx\"")
+	return nil
+}
+
+// CertBotCheckExpiry checks the expiry of the CertBot.
+//
+// Parameter(s):
+// - c: the cli.Context object.
+//
+// Return type(s):
+// - error: any error that occurred during the execution.
+func CertBotCheckExpiry(c *cli.Context) error {
+	err := helpers.CheckPermissionSudo()
+	helpers.HandleError(err)
+
+	// Check certbot exist
+	cmd := exec.Command("which", "certbot")
+	_, err = cmd.CombinedOutput()
+	if err != nil {
+		helpers.Log("Please install certbot: sudo h-devops cert i")
+		return nil
+	}
+
+	err = helpers.RunCmd("certbot", "certificates")
 	helpers.HandleError(err)
 	return nil
 }
