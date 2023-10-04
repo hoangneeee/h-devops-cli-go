@@ -30,6 +30,13 @@ func AddToSudoers(line string) error {
 	return nil
 }
 
+// CheckPermissionSudo checks if the program is running as root (or using sudo).
+//
+// It does this by checking the effective user ID of the current process. If the effective user ID is not 0,
+// it returns an error indicating that the program must be run as root (or using sudo).
+//
+// Returns:
+// - error: An error indicating that the program must be run as root (or using sudo).
 func CheckPermissionSudo() error {
 	if os.Geteuid() != 0 {
 		return cli.Exit("This program must be run as root (or using sudo).", 1)
@@ -41,8 +48,7 @@ func CheckCurlExist() error {
 	cmd := exec.Command("which", "curl")
 	_, err := cmd.CombinedOutput()
 	if err != nil {
-		fmt.Println("Please install curl: sudo apt-get install curl")
-		return nil
+		return cli.Exit("Please install curl: sudo apt-get install curl", 1)
 	}
 	return nil
 }
@@ -53,6 +59,12 @@ func HandleError(err error) {
 	}
 }
 
+// RunCmd executes the given command with the provided arguments.
+//
+// The arg parameter specifies the command to be executed, and the args parameter
+// is an optional list of arguments to be passed to the command.
+//
+// The function returns an error if the command execution fails.
 func RunCmd(arg string, args ...string) error {
 	cmd := exec.Command(arg, args...)
 

@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-const VERSION = "0.4.1"
+const VERSION = "0.5.0"
 
 func main() {
 	app := &cli.App{
@@ -80,6 +80,31 @@ func main() {
 						Aliases:   []string{"add"},
 						ArgsUsage: "<username>",
 						Action:    cmd.AddUserToDockerGroup,
+					},
+				},
+			},
+			{
+				Name:    "certbot",
+				Aliases: []string{"cert", "c"},
+				Usage:   "Certbot helper",
+				Subcommands: []*cli.Command{
+					{
+						Name:    "install",
+						Usage:   "Install Certbot",
+						Aliases: []string{"i"},
+						Action:  cmd.InstallCertbot,
+					},
+					{
+						Name:    "auto-renew-guide",
+						Usage:   "Auto renew Let's encrypt certificate for Nginx",
+						Aliases: []string{"a"},
+						Action:  cmd.AutoRenewCertbotGuide,
+					},
+					{
+						Name:    "expiry",
+						Usage:   "Check Certificates expiry date",
+						Aliases: []string{"ex"},
+						Action:  cmd.CertBotCheckExpiry,
 					},
 				},
 			},
