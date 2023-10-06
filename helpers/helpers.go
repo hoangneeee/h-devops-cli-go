@@ -17,7 +17,7 @@ func AddToSudoers(line string) error {
 	defer func(file *os.File) {
 		err := file.Close()
 		if err != nil {
-
+			log.Fatal(err)
 		}
 	}(file)
 
