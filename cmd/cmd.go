@@ -196,6 +196,10 @@ func CertBotCheckExpiry(c *cli.Context) error {
 	return nil
 }
 
+// InstallPHP installs a specific version of PHP.
+//
+// It takes a *cli.Context as a parameter.
+// It returns an error.
 func InstallPHP(c *cli.Context) error {
 	err := helpers.CheckPermissionSudo()
 	helpers.HandleError(err)
@@ -205,6 +209,31 @@ func InstallPHP(c *cli.Context) error {
 	helpers.Log("Installing PHP version " + phpVersion + "...")
 
 	err = helpers.RunCmd("apt-get", "install", "php"+phpVersion)
+	helpers.HandleError(err)
+
+	return nil
+}
+
+// RemovePHP removes the specified version of PHP.
+//
+// It takes a *cli.Context as a parameter.
+// It returns an error.
+func RemovePHP(c *cli.Context) error {
+	err := helpers.CheckPermissionSudo()
+	helpers.HandleError(err)
+	phpVersion := c.String("version")
+
+	if phpVersion == "" {
+		return cli.Exit("Please specify a version", 1)
+	}
+
+	err = helpers.RunCmd("apt-get", "remove", "php"+phpVersion)
+	helpers.HandleError(err)
+
+	err = helpers.RunCmd("apt-get", "autorclear")
+	helpers.HandleError(err)
+
+	err = helpers.RunCmd("apt-get", "autoremove")
 	helpers.HandleError(err)
 
 	return nil

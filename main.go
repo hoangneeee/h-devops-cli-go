@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-const VERSION = "0.5.0"
+const VERSION = "0.5.1"
 const PhpDefaultVersion = "7.4"
 
 func main() {
@@ -127,6 +127,19 @@ func main() {
 							},
 						},
 						Action: cmd.InstallPHP,
+					},
+					{
+						Name:    "remove",
+						Usage:   "Remove PHP",
+						Aliases: []string{"r"},
+						Flags: []cli.Flag{
+							&cli.StringFlag{
+								Name:    "version",
+								Aliases: []string{"v"},
+								Usage:   "Specify the PHP version to remove",
+							},
+						},
+						Action: cmd.RemovePHP,
 					},
 				},
 			},
