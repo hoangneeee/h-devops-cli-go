@@ -196,6 +196,20 @@ func CertBotCheckExpiry(c *cli.Context) error {
 	return nil
 }
 
+func InstallPHP(c *cli.Context) error {
+	err := helpers.CheckPermissionSudo()
+	helpers.HandleError(err)
+
+	phpVersion := c.String("version")
+	helpers.Log("Retrieve PHP version " + phpVersion)
+	helpers.Log("Installing PHP version " + phpVersion + "...")
+
+	err = helpers.RunCmd("apt-get", "install", "php"+phpVersion)
+	helpers.HandleError(err)
+
+	return nil
+}
+
 // Private function
 
 func installDocker() error {
