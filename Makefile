@@ -4,6 +4,9 @@ build:
 run:
 	go run main.go
 
+lint:
+	golangci-lint run
+
 compile:
 	echo "Compiling for every OS and Platform"
 

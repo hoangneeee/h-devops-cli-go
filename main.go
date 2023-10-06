@@ -9,6 +9,7 @@ import (
 )
 
 const VERSION = "0.5.0"
+const PhpDefaultVersion = "7.4"
 
 func main() {
 	app := &cli.App{
@@ -105,6 +106,27 @@ func main() {
 						Usage:   "Check Certificates expiry date",
 						Aliases: []string{"ex"},
 						Action:  cmd.CertBotCheckExpiry,
+					},
+				},
+			},
+			{
+				Name:    "php",
+				Aliases: []string{"php"},
+				Usage:   "PHP helper",
+				Subcommands: []*cli.Command{
+					{
+						Name:    "install",
+						Usage:   "Install PHP",
+						Aliases: []string{"i"},
+						Flags: []cli.Flag{
+							&cli.StringFlag{
+								Name:    "version",
+								Aliases: []string{"v"},
+								Value:   PhpDefaultVersion, // Default PHP version
+								Usage:   "Specify the PHP version to install",
+							},
+						},
+						Action: cmd.InstallPHP,
 					},
 				},
 			},
