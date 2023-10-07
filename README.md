@@ -79,6 +79,16 @@ h-devops php i -v 8.0
 ```shell
 h-devops php r -v 8.*
 ```
+
+### Fail2Ban commands
+- Install Fail2Ban
+```shell
+h-devops f2b i
+```
+- Configure Fail2Ban
+```shell
+h-devops f2b c
+```
 ---
 
 ## How to develop

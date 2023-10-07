@@ -75,3 +75,40 @@ func RunCmd(arg string, args ...string) error {
 	fmt.Fprintf(os.Stderr, "# ---> %s\n", cmd)
 	return cmd.Run()
 }
+
+// LoadContentFromFile loads a template from a file.
+//
+// It takes a filePath string as a parameter and returns a string and an error.
+func LoadContentFromFile(filePath string) (string, error) {
+	content, err := os.ReadFile(filePath)
+	if err != nil {
+		return "", err
+	}
+	return string(content), nil
+}
+
+// WriteConfigToFile writes the given content to a file specified by the filePath.
+//
+// Parameters:
+// - filePath: a string representing the path of the file.
+// - content: a string containing the content to be written to the file.
+//
+// Returns:
+// - an error if there was an issue creating or writing to the file.
+func WriteConfigToFile(filePath, content string) error {
+	file, err := os.Create(filePath)
+	HandleError(err)
+	defer func(file *os.File) {
+		err := file.Close()
+		if err != nil {
+			log.Fatal(err)
+		}
+	}(file)
+
+	_, err = file.WriteString(content)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
