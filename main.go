@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-const VERSION = "0.5.1"
+const VERSION = "0.5.2"
 const PhpDefaultVersion = "7.4"
 
 func main() {
@@ -140,6 +140,25 @@ func main() {
 							},
 						},
 						Action: cmd.RemovePHP,
+					},
+				},
+			},
+			{
+				Name:    "fail2ban",
+				Usage:   "Fail2ban Helper Commands",
+				Aliases: []string{"f2b"},
+				Subcommands: []*cli.Command{
+					{
+						Name:    "install",
+						Usage:   "Install Fail2Ban",
+						Aliases: []string{"i"},
+						Action:  cmd.InstallFail2Ban,
+					},
+					{
+						Name:    "config",
+						Aliases: []string{"c"},
+						Usage:   "Generate config Fail2Ban",
+						Action:  cmd.ConfigureFail2Ban,
 					},
 				},
 			},
