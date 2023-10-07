@@ -1,5 +1,7 @@
 # H-devops
 
+![Release](https://github.com/hoangneeee/h-devops-cli-go/actions/workflows/release_build.yml/badge.svg)
+
 ## How to install
 `h-devops` is available for MacOS and Linux based operating systems.
 
@@ -106,3 +108,7 @@ go run main.go
 
 ## Issue
 Please open an issue [New issue](https://github.com/hoangneeee/h-devops-cli-go/issues)
+
+## License
+
+See [`LICENSE`](./LICENSE)
