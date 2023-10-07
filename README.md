@@ -69,6 +69,16 @@ h-devops cert a
 h-devops cert ex
 ```
 
+### PHP Helper commands
+- Install PHP version (Default: 7.4)
+```shell
+h-devops php i
+h-devops php i -v 8.0
+```
+- Remove PHP version
+```shell
+h-devops php r -v 8.*
+```
 ---
 
 ## How to develop
