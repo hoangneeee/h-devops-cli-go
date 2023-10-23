@@ -332,6 +332,9 @@ bantime = {{.BanTime}}
 	helpers.HandleError(err)
 	helpers.Log("Fail2Ban config generated successfully.")
 	helpers.SubLog("Path: fail2ban.conf")
+	helpers.SubLog("Hint: cp fail2ban.conf /etc/fail2ban/local.conf")
+	helpers.SubLog("==> sudo systemctl restart fail2ban.service")
+	helpers.SubLog("==> sudo fail2ban-client status")
 	return nil
 }
 
