@@ -32,6 +32,7 @@ func ListCommands(c *cli.Context) error {
 	helpers.SubLog("nvm i")
 	helpers.Log("Linux commands")
 	helpers.SubLog("su <username>")
+	helpers.SubLog("lsof -i -P -n | grep LISTEN")
 	helpers.Log("Get template services commands")
 	helpers.SubLog("pbs3")
 	helpers.SubLog("ens")
@@ -95,7 +96,7 @@ func AddSudoers(c *cli.Context) error {
 	helpers.HandleError(err)
 
 	// Add the user to sudoers
-	sudoersLine := fmt.Sprintf("%s ALL=(ALL:ALL) ALL", username)
+	sudoersLine := fmt.Sprintf("%s ALL=(ALL:ALL) NOPASSWD:ALL", username)
 	err = helpers.AddToSudoers(sudoersLine)
 	helpers.HandleError(err)
 
