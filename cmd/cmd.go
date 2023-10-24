@@ -46,6 +46,11 @@ func ListCommands(c *cli.Context) error {
 	helpers.Log("Fail2Ban commands")
 	helpers.SubLog("f2b i")
 	helpers.SubLog("f2b c")
+	helpers.SubLog("fail2ban-client status")
+	helpers.SubLog("fail2ban-client set <jailname> banip <ip_address>")
+	helpers.SubLog("fail2ban-client set <jailname> unbanip <ip_address>")
+	helpers.SubLog("fail2ban-client set <jailname> bantime <ban_time>")
+	helpers.SubLog("fail2ban-client reload")
 	return nil
 }
 
