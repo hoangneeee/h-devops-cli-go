@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-const VERSION = "0.5.2"
+const VERSION = "0.5.3"
 const PhpDefaultVersion = "7.4"
 
 func main() {
